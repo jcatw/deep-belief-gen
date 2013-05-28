@@ -1,7 +1,14 @@
+addtosystempath('/opt/local/bin');
+
+addpath(genpath('lib'));
+addpath(genpath('data'));
+addpath(genpath('src'));
+
+
 % training data parameters
 N = 100;  % number of training networks (must be perfect square)
 S = 1000; % number of nodes in the training networks
-z = 300;   % only consider the z x z upper lefthand sub-matrix
+z = 100;   % only consider the z by z upper lefthand sub-matrix
 
 % RBM parameters
 T = 50;
