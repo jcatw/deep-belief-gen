@@ -1,0 +1,1 @@
+./krapivsky 0.5 0.3 0.3 1000 100 results/dbn-1_0.5_0.3_0.3_1000/sample.csv results/dbn-1_0.5_0.3_0.3_1000/all.csv results/dbn-1_0.5_0.3_0.3_1000/nodes.csv results/dbn-1_0.5_0.3_0.3_1000/edges.csv
