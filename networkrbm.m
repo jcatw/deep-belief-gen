@@ -4,16 +4,23 @@ addpath(genpath('/Users/jatwood/cnrg/graph-generation/deep-belief-gen'));
 
 addtosystempath('/opt/local/bin');
 
+% type of input network
+input_type='smallworld'
+
 % plot?
-plot = 0;
+plot = 1;
 
 % training data parameters
 N = 100;  % number of training networks (must be perfect square)
-S = 1000; % number of nodes in the training networks
-z = 100;   % only consider the z by z upper lefthand sub-matrix
+S = 1000; % number of nodes in the training networks (if pre-generated)
+z = 50;   % only consider the z by z upper lefthand sub-matrix
+
+% smallword parameters
+smallworld_k = 3;
+smallworld_p = 0.2;
 
 % RBM parameters
-K = 1000;
+K = 100;
 T = 50;
 B = 10;
 C = 100;
@@ -22,10 +29,18 @@ lambda = 0.0001;
 
 
 % populate training data
-x = zeros(N,z^2);
-for i=1:N
-    full_network = load_edgelist(sprintf('data/krapivsky-networks/rdbn-%d.csv',i),S);
-    x(i,:) = reshape(full_network(1:z,1:z),1,z^2);
+if strcmp(input_type,'krapivsky')
+    x = zeros(N,z^2);
+    for i=1:N
+        full_network = load_edgelist(sprintf('data/krapivsky-networks/rdbn-%d.csv',i),S);
+        x(i,:) = reshape(full_network(1:z,1:z),1,z^2);
+    end
+elseif strcmp(input_type,'smallworld')
+    x = zeros(N,z^2);
+    for i=1:N
+        full_network = full(smallw(z,smallworld_k,smallworld_p));
+        x(i,:) = reshape(full_network,1,z^2);
+    end
 end
 
 % train rbm
