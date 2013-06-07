@@ -45,97 +45,36 @@ g_minus_W_p = zeros(D,K);
 for t=1:T
     t
     for b=1:B
-        %'batch x'
         batch_x = x( 1+(b-1)*Nb : b*Nb, : );
-        %size(batch_x)
         
         % positive gradient costribution
         g_plus_W_c = sum( batch_x, 1);
         
-        %'W_b'
-        %size(W_b)
-        
-        %'repmat W_b'
-        %size(repmat(W_b,1,Nb))
-        
-        %'batch_x * Wp'
-        %size(batch_x * W_p)
         
         plus_p = exp(repmat(W_b,1,Nb)' + (batch_x * W_p)) ./ (1 + exp(repmat(W_b,1,Nb)' + (batch_x * W_p)));
-        
-        %'plus_p'
-        %size(plus_p)
         
         g_plus_W_b = sum(plus_p,1)';
         
         g_plus_W_p = batch_x' * plus_p;
         
-        % negative gradient contribution
-        
-        %'sample_h'
-        %size(sample_h)
-        
-        %'W_c'
-        %size(W_c)
-        
-        %'repmat W_c'
-        %size(repmat(W_c,C,1))
-        
-        %'W_p'
-        %size(W_p)
-        
-        %'sample_h * W_pt'
-        %size(sample_h * W_p')
-        
+        % negative gradient contribution        
         prob_x = exp(repmat(W_c,C,1) + (sample_h * W_p')) ./ (1 + exp(repmat(W_c,C,1) + (sample_h * W_p')));
-        %sample_x = repmat(prob_x,1,C) < rand(C,D);
         sample_x = prob_x > rand(C,D);
         
-        %'sample_x * W_p'
-        %size(sample_x * W_p)
-        
-        %'repmat W_b t'
-        %size(repmat(W_b,1,C)')
         
         prob_h = exp(repmat(W_b,1,C)' + (sample_x * W_p)) ./ (1 + exp(repmat(W_b,1,C)' + (sample_x * W_p)));
         sample_h = prob_h > rand(C,K);
         
         g_minus_W_c = sum(sample_x,1);
-        
-        %'prob_h'
-        %size(prob_h)
-        
-        %'sample_h'
-        %size(sample_h)
-        
+
         minus_p = prob_h;
         
-        %g_minus_p = sum(minus_p,1);
         g_minus_p = minus_p;
-
-        %'sample_x t'
-        %size(sample_x')
-        
-        %'minus_p'
-        %size(minus_p)
-        
-        %'g_minus_p'
-        %size(g_minus_p)
         
         g_minus_W_p = sample_x' * g_minus_p;
         
-        %'g_minus_W_p'
-        %size(g_minus_W_p)
-        
         % gradient step
         W_c = W_c + alpha*(g_plus_W_c / Nb - g_minus_W_c / C - lambda * W_c);
-        
-        %'W_b'
-        %size(W_b)
-        %'g_plus_W_b'
-        %size(g_plus_W_b)
-        %'g_minus_W_b'
-        %size(g_minus_W_b)
         
         W_b = W_b + alpha*(g_plus_W_b / Nb - g_minus_W_b / C - lambda * W_b);
         

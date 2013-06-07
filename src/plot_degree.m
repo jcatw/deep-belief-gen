@@ -5,7 +5,9 @@ function [] = plot_degree(x, sample, filename)
 % James Atwood 5/29/13
 % jatwood@cs.umass.edu
 
-z = sqrt(length(x));
+[sx1,sx2] = size(x);
+
+z = sqrt(sx2);
 
 [deg, indeg, outdeg] = degrees(reshape(x,z,z));
 [sdeg, sindeg, soutdeg] = degrees(reshape(sample,z,z));

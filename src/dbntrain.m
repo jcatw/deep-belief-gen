@@ -44,5 +44,16 @@ for i=1:L
     dbn.rbms{i} = rbmtrain(transformed_x, T, B(i), C, K(i), alpha, lambda);
 end
 
+% untie parameters
+for i=1:length(dbn.rbms)-1
+    dbn.rbms{i}.gen.Wb = dbn.rbms{i}.Wb;
+    dbn.rbms{i}.gen.Wc = dbn.rbms{i}.Wc;
+    dbn.rbms{i}.gen.Wp = dbn.rbms{i}.Wp;
+
+    dbn.rbms{i}.rec.Wb = dbn.rbms{i}.Wb;
+    dbn.rbms{i}.rec.Wc = dbn.rbms{i}.Wc;
+    dbn.rbms{i}.rec.Wp = dbn.rbms{i}.Wp;
+end
+
 end
 
