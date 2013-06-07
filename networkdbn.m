@@ -5,7 +5,10 @@ addpath(genpath('/Users/jatwood/cnrg/graph-generation/deep-belief-gen'));
 addtosystempath('/opt/local/bin');
 
 % type of input network
-input_type='smallworld'
+% one of:
+%  'krapivsky'
+%  'smallworld'
+input_type='krapivsky'
 
 % compare samples to training?
 compare = 1;
@@ -13,7 +16,7 @@ compare = 1;
 % training data parameters
 N = 49;  % number of training networks (must be perfect square)
 S = 1000; % number of nodes in the training networks (if pre-generated)
-z = 50;   % only consider the z by z upper lefthand sub-matrix
+z = 200;   % only consider the z by z upper lefthand sub-matrix
 
 % smallword parameters
 smallworld_k = 3;
@@ -49,6 +52,8 @@ end
 dbn = dbntrain(x, L, T, B, C, K, alpha, lambda);
 
 if compare
+    timestamp = now;
+    
     samples = dbnsample(dbn,N,t);
     
     fig=figure();
@@ -56,14 +61,14 @@ if compare
         subplot(sqrt(N),sqrt(N),i), imshow(reshape(x(N,:),z,z));
         title(sprintf('x(%d,:)',i));
     end
-    saveas(fig,sprintf('results/dbn_%f_%s_x.pdf',now,input_type),'pdf');
+    saveas(fig,sprintf('results/dbn_%f_%s_x.pdf',timestamp,input_type),'pdf');
     
     fig=figure();
     for i=1:N
         subplot(sqrt(N),sqrt(N),i), imshow(reshape(samples(N,:),z,z));
         title(sprintf('s(%d,:)',i));
     end
-    saveas(fig,sprintf('results/dbn_%f_%s_s.pdf',now,input_type),'pdf');
+    saveas(fig,sprintf('results/dbn_%f_%s_s.pdf',timestamp,input_type),'pdf');
     
     
 end
