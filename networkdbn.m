@@ -1,4 +1,5 @@
-addpath(genpath('/Users/jatwood/cnrg/graph-generation/deep-belief-gen'));
+addpath(genpath('.'));
+%addpath(genpath('/Users/jatwood/cnrg/graph-generation/deep-belief-gen'));
 %addpath(genpath('data'));
 %addpath(genpath('src'));
 
