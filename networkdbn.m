@@ -2,7 +2,7 @@ addpath(genpath('/Users/jatwood/cnrg/graph-generation/deep-belief-gen'));
 %addpath(genpath('data'));
 %addpath(genpath('src'));
 
-addtosystempath('/opt/local/bin');
+%addtosystempath('/opt/local/bin');
 
 % type of input network
 % one of:
