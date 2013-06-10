@@ -11,7 +11,7 @@ addtosystempath('/opt/local/bin');
 input_type='krapivsky'
 
 % compare samples to training?
-compare = 1;
+compare = 0;
 
 % training data parameters
 N = 49;  % number of training networks (must be perfect square)
@@ -26,9 +26,9 @@ smallworld_p = 0.2;
 L = 3;
 K = [100 50 50];
 T = 50;
-B = [7 7 7];
+B = 7;
 C = 100;
-t = 3;
+G = 4;
 alpha = 0.1;
 lambda = 0.0001;
 
@@ -49,12 +49,12 @@ elseif strcmp(input_type,'smallworld')
 end
 
 % train dbn
-dbn = dbntrain(x, L, T, B, C, K, alpha, lambda);
+dbn = dbntrain(x, L, T, B, C, K, G, alpha, lambda);
 
 if compare
     timestamp = now;
     
-    samples = dbnsample(dbn,N,t);
+    samples = dbnsample(dbn,N,G);
     
     fig=figure();
     for i=1:N

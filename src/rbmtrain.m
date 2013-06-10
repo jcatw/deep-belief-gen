@@ -66,6 +66,7 @@ for t=1:T
         sample_h = prob_h > rand(C,K);
         
         g_minus_W_c = sum(sample_x,1);
+	g_minus_W_b = sum(prob_h,1);
 
         minus_p = prob_h;
         
