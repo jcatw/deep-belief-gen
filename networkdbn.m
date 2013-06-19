@@ -9,10 +9,10 @@ addpath(genpath('.'));
 % one of:
 %  'krapivsky'
 %  'smallworld'
-input_type='krapivsky'
+input_type='krapivsky';
 
 % compare samples to training?
-compare = 0;
+compare = 1;
 
 % training data parameters
 N = 49;  % number of training networks (must be perfect square)
@@ -35,6 +35,7 @@ lambda = 0.0001;
 
 
 % populate training data
+fprintf(1,'\nPopulating training data for model type %s.\n', input_type);
 if strcmp(input_type,'krapivsky')
     x = zeros(N,z^2);
     for i=1:N
@@ -50,26 +51,32 @@ elseif strcmp(input_type,'smallworld')
 end
 
 % train dbn
+fprintf(1,'\nPretraining and backfitting dbn.\n');
 dbn = dbntrain(x, L, T, B, C, K, G, alpha, lambda);
 
 if compare
-    timestamp = now;
+   fprintf(1,'\nGenerating comparison plots.\n');
+   timestamp = now;
     
-    samples = dbnsample(dbn,N,G);
+   samples = dbnsample(dbn,N,G,10);
     
-    fig=figure();
-    for i=1:N
-        subplot(sqrt(N),sqrt(N),i), imshow(reshape(x(N,:),z,z));
-        title(sprintf('x(%d,:)',i));
-    end
-    saveas(fig,sprintf('results/dbn_%f_%s_x.pdf',timestamp,input_type),'pdf');
-    
-    fig=figure();
-    for i=1:N
-        subplot(sqrt(N),sqrt(N),i), imshow(reshape(samples(N,:),z,z));
-        title(sprintf('s(%d,:)',i));
-    end
-    saveas(fig,sprintf('results/dbn_%f_%s_s.pdf',timestamp,input_type),'pdf');
-    
-    
+   fig=figure();
+   for i=1:N
+     subplot(sqrt(N),sqrt(N),i), imshow(reshape(x(i,:),z,z));
+     title(sprintf('x(%d,:)',i));
+   end
+   saveas(fig,sprintf('results/dbn_%f_%s_x.pdf',timestamp,input_type),'pdf');
+   
+   fig=figure();
+   for i=1:N
+     subplot(sqrt(N),sqrt(N),i), imshow(reshape(samples(i,:),z,z));
+     title(sprintf('s(%d,:)',i));
+   end
+   saveas(fig,sprintf('results/dbn_%f_%s_s.pdf',timestamp,input_type),'pdf');
+
+   if strcmp(input_type,'krapivsky')
+      for i=1:3
+	plot_degree(x(i,:),samples(i,:),sprintf('results/dbn_%f_%s_degree_%d.pdf',timestamp,input_type,i));
+      end
+   end
 end
