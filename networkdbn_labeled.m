@@ -21,13 +21,15 @@ smallworld_p = 0.2;
 
 % DBN parameters
 L = 3;
-K = [100 50 50];
+K = [100 100 100];
 T = 50;
 B = 8;
 C = 100;
 G = 10;
 alpha = 0.1;
 lambda = 0.0001;
+
+sample_burn = 0;
 
 
 % populate training data
@@ -48,8 +50,8 @@ end
 x = [x1; x2];
 %labels = [zeros(N,1); ones(N,1)];
 labels = zeros(2*N,2);
-labels(1:N-1,1) = 1;
-labels(N:end,2) = 1;
+labels(1:N,1) = 1;
+labels(N+1:end,2) = 1;
 %labels
 
 % train dbn
@@ -60,7 +62,7 @@ if compare
    fprintf(1,'\nGenerating comparison plots.\n');
    timestamp = now;
     
-   samples = dbnsample(dbn,2*N,G,10);
+   samples = dbnsample(dbn,2*N,G*10,sample_burn);
     
    fig=figure();
    for i=1:2*N
@@ -76,7 +78,7 @@ if compare
    end
    saveas(fig,sprintf('results/dbn_%f_%s_s.pdf',timestamp,input_type),'pdf');
 
-   krapivsky_samples = dbnsample_labeled(dbn, [1,0], 2*N, G, 10);
+   krapivsky_samples = dbnsample_labeled(dbn, [1,0], 2*N, G*10, sample_burn);
    
    fig=figure();
    for i=1:2*N
@@ -85,7 +87,7 @@ if compare
    end
    saveas(fig,sprintf('results/dbn_%f_%s_krapiv_s.pdf',timestamp,input_type),'pdf');
 
-   sworld_samples = dbnsample_labeled(dbn, [0,1], 2*N, G, 10);
+   sworld_samples = dbnsample_labeled(dbn, [0,1], 2*N, G*10, sample_burn);
    fig=figure();
    for i=1:2*N
      subplot(sqrt(2*N),sqrt(2*N),i), imshow(reshape(sworld_samples(i,:),z,z));
@@ -95,5 +97,11 @@ if compare
 
    for i=1:3
      plot_degree(x(i,:),samples(i,:),sprintf('results/dbn_%f_%s_degree_%d.pdf',timestamp,input_type,i));
+   end
+
+   genfield = dbn.gen.pair{1};
+   for i=1:dbn.K(1)
+       subplot(ceil(sqrt(K(1))),ceil(sqrt(K(1))),i), imshow(reshape(genfield(i,:),z,z));
+       title(sprintf('gen',i));
    end
 end
