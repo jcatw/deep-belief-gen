@@ -22,10 +22,12 @@ smallworld_p = 0.2;
 % DBN parameters
 L = 3;
 K = [100 100 100];
-T = 50;
+T  = 50;
+Tb = 50;
 B = 8;
 C = 100;
 G = 10;
+Gs = 5;
 alpha = 0.1;
 lambda = 0.0001;
 
@@ -53,16 +55,22 @@ labels = zeros(2*N,2);
 labels(1:N,1) = 1;
 labels(N+1:end,2) = 1;
 %labels
+% [1 0]: krapivsky
+% [0 1]: smallworld
+
+ordr = randperm(2*N);
+x = x(ordr,:);
+labels = labels(ordr,:);
 
 % train dbn
 fprintf(1,'\nPretraining and backfitting dbn.\n');
-dbn = dbntrain_labeled(x, labels, L, T, B, C, K, G, alpha, lambda);
+dbn = dbntrain_labeled(x, labels, L, T, Tb, B, C, K, G, alpha, lambda);
 
 if compare
    fprintf(1,'\nGenerating comparison plots.\n');
    timestamp = now;
     
-   samples = dbnsample(dbn,2*N,G*10,sample_burn);
+   samples = dbnsample(dbn,2*N,Gs,sample_burn);
     
    fig=figure();
    for i=1:2*N
@@ -78,7 +86,7 @@ if compare
    end
    saveas(fig,sprintf('results/dbn_%f_%s_s.pdf',timestamp,input_type),'pdf');
 
-   krapivsky_samples = dbnsample_labeled(dbn, [1,0], 2*N, G*10, sample_burn);
+   krapivsky_samples = dbnsample_clamp(dbn, [1,0], 2*N, Gs, sample_burn);
    
    fig=figure();
    for i=1:2*N
@@ -87,7 +95,7 @@ if compare
    end
    saveas(fig,sprintf('results/dbn_%f_%s_krapiv_s.pdf',timestamp,input_type),'pdf');
 
-   sworld_samples = dbnsample_labeled(dbn, [0,1], 2*N, G*10, sample_burn);
+   sworld_samples = dbnsample_clamp(dbn, [0,1], 2*N, Gs, sample_burn);
    fig=figure();
    for i=1:2*N
      subplot(sqrt(2*N),sqrt(2*N),i), imshow(reshape(sworld_samples(i,:),z,z));

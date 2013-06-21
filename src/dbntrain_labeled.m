@@ -1,4 +1,4 @@
-function [ dbn ] = dbntrain_labeled( x, labels, L, T, B, C, K, G, alpha, lambda )
+function [ dbn ] = dbntrain_labeled( x, labels, L, T, Tb, B, C, K, G, alpha, lambda )
 %DBNTRAIN Train a deep belief network.
 %   Train a deep belief network (DBN) via greedy stochastic mini-batch
 %   gradient descent.
@@ -40,6 +40,7 @@ Nb = N / B;
 dbn.L = L;
 dbn.K = K;
 dbn.D = D;
+dbn.numclasses = lablen;
 
 dbn.rec.bias = cell(1,L+1);  % work with receptive weights, set generative to result when done
 dbn.rec.pair = cell(1,L);
@@ -57,7 +58,7 @@ sample_h = randi(2,C,K(1)) - 1;
 % train first layer
 for t=1:T
   for b=1:B
-    fprintf(1,'Layer 1, iteration %d, batch %d\n',t,b);
+    fprintf(1,'Pretraining: layer 1, iteration %d, batch %d\n',t,b);
 
     batch_data = x( 1+(b-1)*Nb : b*Nb, : );
 
@@ -92,7 +93,7 @@ for lyr=2:L-1
   sample_h = randi(2,C,K(lyr)) - 1;
   for t=1:T
     for b=1:B
-	fprintf(1,'Layer %d, iteration %d, batch %d\n',lyr,t,b);
+	fprintf(1,'Pretraining: layer %d, iteration %d, batch %d\n',lyr,t,b);
 
 	% sample current visible layer
 	batch_data = x( 1+(b-1)*Nb : b*Nb, : );
@@ -133,7 +134,7 @@ dbn.rec.bias{lyr+1} = 0.1 * randn(1,K(lyr));
 sample_h = randi(2,C,K(lyr)) - 1;
 for t=1:T
   for b=1:B
-    fprintf(1,'Layer %d, iteration %d, batch %d\n',lyr,t,b);
+    fprintf(1,'Pretraining: layer %d, iteration %d, batch %d\n',lyr,t,b);
 
     % sample current visible layer
     batch_data = x( 1+(b-1)*Nb : b*Nb, : );
@@ -161,12 +162,13 @@ for t=1:T
     %size(sample_h)
     %size(dbn.rec.label.pair')
     prob_lab = softmax( sample_h * dbn.rec.label.pair' + repmat(dbn.rec.label.bias,C,1) );
-    %sample_lab = softmax_sample(prob_lab);
+    sample_lab = softmax_sample(prob_lab);
     %size(prob_lab)
     %size(sample_lab)
     prob_h = logistic( sample_x * dbn.rec.pair{lyr} + ...
 		       repmat(dbn.rec.bias{lyr+1},C,1) + ...
-		       prob_lab * dbn.rec.label.pair);
+		       %prob_lab * dbn.rec.label.pair);
+		       sample_lab * dbn.rec.label.pair);
     sample_h = prob_h > rand(C,K(lyr));
 
     g_minus_pen_bias = sum(sample_x,1);
@@ -204,6 +206,6 @@ dbn.gen.label.bias = dbn.rec.label.bias;
 dbn.gen.label.pair = dbn.rec.label.pair';
 
 % tune via backprop
-dbn = dbnbackfit_labeled(dbn, x, labels, B, G, alpha, lambda);
+dbn = dbnbackfit_labeled(dbn, x, labels, Tb, B, G, alpha, lambda);
 end
 
