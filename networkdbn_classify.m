@@ -3,7 +3,7 @@ addpath(genpath('.'));
 timestamp=now;
 
 % xval-fold cross-validation
-xval = 3;
+xval = 5;
 
 % DBN parameters
 L = 3;
