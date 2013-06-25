@@ -25,4 +25,6 @@ end
 %size(label_probs)
 %size(max(label_probs,[],2))
 %predictions = double( label_probs == max(label_probs,[],2) );
+%prob_l(1:5,:)
+%repmat(max(prob_l(1:5,:),[],2),1,dbn.numclasses)
 predictions = double( prob_l == repmat(max(prob_l,[],2),1,dbn.numclasses) );

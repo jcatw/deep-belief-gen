@@ -3,14 +3,14 @@ addpath(genpath('.'));
 timestamp=now;
 
 % xval-fold cross-validation
-xval = 5;
+xval = 2;
 
 % DBN parameters
 L = 3;
 K = [100 100 100];
-T  = 50;
-Tb = 50;
-B = 20;
+T  = 20;
+Tb = 20;
+B = 5;
 C = 100;
 G = 10;
 Gs = 5;
@@ -27,9 +27,9 @@ lbl_er     = [0 0 1];
 N = zeros(1,nlab);  % number of training instances by label
 z = 200;            % number of nodes in each network
 
-N(logical(lbl_krapiv)) = 1000;
-N(logical(lbl_smallw)) = 1000;
-N(logical(lbl_er))     = 1000;
+N(logical(lbl_krapiv)) = 100;
+N(logical(lbl_smallw)) = 100;
+N(logical(lbl_er))     = 100;
 N_total = N(logical(lbl_krapiv)) + N(logical(lbl_smallw)) + N(logical(lbl_er));
 
 assert(mod(N_total,xval) == 0, ...
