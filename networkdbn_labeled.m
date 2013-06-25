@@ -64,7 +64,7 @@ labels = labels(ordr,:);
 
 % train dbn
 fprintf(1,'\nPretraining and backfitting dbn.\n');
-dbn = dbntrain_labeled(x, labels, L, T, Tb, B, C, K, G, alpha, lambda);
+dbn = dbntrain_labeled_real(x, labels, L, T, Tb, B, C, K, G, alpha, lambda);
 
 if compare
    fprintf(1,'\nGenerating comparison plots.\n');

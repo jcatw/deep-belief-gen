@@ -3,14 +3,14 @@ addpath(genpath('.'));
 timestamp=now;
 
 % xval-fold cross-validation
-xval = 5;
+xval = 3;
 
 % DBN parameters
-L = 5;
-K = [100 100 100 100 100];
-T  = 50;
-Tb = 50;
-B = 20;
+L = 3;
+K = [100 100 100];
+T  = 20;
+Tb = 20;
+B = 5;
 C = 100;
 G = 10;
 Gs = 5;
@@ -27,9 +27,9 @@ lbl_er     = [0 0 1];
 N = zeros(1,nlab);  % number of training instances by label
 z = 200;            % number of nodes in each network
 
-N(logical(lbl_krapiv)) = 1000;
-N(logical(lbl_smallw)) = 1000;
-N(logical(lbl_er))     = 1000;
+N(logical(lbl_krapiv)) = 100;
+N(logical(lbl_smallw)) = 100;
+N(logical(lbl_er))     = 100;
 N_total = N(logical(lbl_krapiv)) + N(logical(lbl_smallw)) + N(logical(lbl_er));
 
 assert(mod(N_total,xval) == 0, ...
@@ -38,7 +38,7 @@ assert(mod(N_total,xval) == 0, ...
 
 x_lab = cell(1,nlab);
 
-%% krapivsky [1 0 0]
+%% krapivsky [0 1 0]
 krapiv_S = 1000;
 fprintf(1,'\nPopulating training data for model type %s.\n', 'krapivsky');
 
@@ -50,7 +50,7 @@ end
 x_lab{logical(lbl_krapiv)} = krapiv_x;
 clear krapiv_x;
 
-%% smallworld [0 1 0]
+%% smallworld [1 0 0]
 smallworld_k = 3;
 smallworld_p = 0.2;
 
@@ -64,7 +64,7 @@ end
 x_lab{logical(lbl_smallw)} = smallw_x;
 clear smallw_x;
 
-%% sticky [0 0 1]
+%% er [0 0 1]
 fprintf(1,'\nPopulating training data for model type %s.\n', 'erdos-renyi');
 %fprintf(1,'\nPopulating training data for model type %s.\n', 'sticky');
 
@@ -112,7 +112,7 @@ for i=1:xval
     fprintf(1,'\nValidation %d: Pretraining and backfitting dbn.\n',i);
     clear dbn;
     dbn = dbntrain_labeled(x_train, labels_train, L, T, Tb, B, C, K, G, alpha, lambda);
-    predictions = dbnclassify_simple(dbn,x_test);
+    predictions = dbnclassify(dbn,x_test,10);
     %size(predictions)
     %size(labels_test)
     %size(predictions == labels_test)
