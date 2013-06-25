@@ -107,9 +107,11 @@ if compare
      plot_degree(x(i,:),samples(i,:),sprintf('results/dbn_%f_%s_degree_%d.pdf',timestamp,input_type,i));
    end
 
+   fig = figure();
    genfield = dbn.gen.pair{1};
    for i=1:dbn.K(1)
        subplot(ceil(sqrt(K(1))),ceil(sqrt(K(1))),i), imshow(reshape(genfield(i,:),z,z));
        title(sprintf('gen',i));
    end
+   saveas(fig,sprintf('results/dbn_%f_%s_receptive.pdf',timestamp,input_type),'pdf')
 end
