@@ -1,7 +1,8 @@
 addpath(genpath('.'));
 
 timestamp=now;
-writefile = fopen('classification_results_job1.csv','w');
+writefilename = 'classification_results_job1.csv';
+
 
 % xval-fold cross-validation
 xval = 5;
@@ -129,5 +130,7 @@ imshow(confusion_matrix);
 title('Confusion Matrix');
 saveas(fig,sprintf('results/dbn_%f_classification_confusion.pdf',timestamp),'pdf');
 
+writefile = fopen(writefilename,'w');
 fprintf('%d,%d,%d,%d,%d,%d,%d,%f,%f,%f\n', ...
 	N,Z,L,K(1),T,B,G,alpha,lambda,mean(accuracy))
+fclose(writefile);
