@@ -1,21 +1,14 @@
 addpath(genpath('.'));
 
 timestamp=now;
+writefile = fopen('classification_results_job1.csv','w');
 
 % xval-fold cross-validation
 xval = 5;
 
 % DBN parameters
-L = 3;
-K = [100 100 100];
-T  = 50;
-Tb = 50;
-B = 20;
-C = 100;
-G = 10;
-Gs = 5;
-alpha = 0.1;
-lambda = 0.0001;
+%standard_small_parameterization;
+random_parameterization;
 
 % labels
 nlab = 3;
@@ -25,11 +18,11 @@ lbl_er     = [0 0 1];
 
 % training data
 N = zeros(1,nlab);  % number of training instances by label
-z = 200;            % number of nodes in each network
+%z = 200;            % number of nodes in each network
 
-N(logical(lbl_krapiv)) = 1000;
-N(logical(lbl_smallw)) = 1000;
-N(logical(lbl_er))     = 1000;
+N(logical(lbl_krapiv)) = N_krapiv;
+N(logical(lbl_smallw)) = N_smallw;
+N(logical(lbl_er))     = N_er;
 N_total = N(logical(lbl_krapiv)) + N(logical(lbl_smallw)) + N(logical(lbl_er));
 
 assert(mod(N_total,xval) == 0, ...
@@ -59,7 +52,10 @@ fprintf(1,'\nPopulating training data for model type %s.\n', 'smallworld');
 smallw_x = zeros(N(logical(lbl_smallw)),z^2);
 for i=1:N(logical(lbl_smallw))
   full_network = full(smallw(z,smallworld_k,smallworld_p));
-  smallw_x(i,:) = reshape(full_network,1,z^2);
+  %full_network = load(sprintf('data/smallworld-networks/sw%d',i));
+  smallw_x(i,:) = reshape(full_network(1:z,1:z),1,z^2);
+  %smallw_x(i,:) = reshape(full_network.full_network(1:z,1:z),1,z^2);
+  
 end
 x_lab{logical(lbl_smallw)} = smallw_x;
 clear smallw_x;
@@ -71,7 +67,9 @@ fprintf(1,'\nPopulating training data for model type %s.\n', 'erdos-renyi');
 er_x = zeros(N(logical(lbl_er)),z^2);
 for i=1:N(logical(lbl_er))
   full_network = full(erdrey(z,2*z));
-  er_x(i,:) = reshape(full_network,1,z^2);
+  %full_network = load(sprintf('data/er-networks/er%d',i));
+  er_x(i,:) = reshape(full_network(1:z,1:z),1,z^2);
+  %er_x(i,:) = reshape(full_network.full_network(1:z,1:z),1,z^2);
 end
 x_lab{logical(lbl_er)} = er_x;
 clear er_x;
@@ -130,3 +128,6 @@ fig=figure();
 imshow(confusion_matrix);
 title('Confusion Matrix');
 saveas(fig,sprintf('results/dbn_%f_classification_confusion.pdf',timestamp),'pdf');
+
+fprintf('%d,%d,%d,%d,%d,%d,%d,%f,%f,%f\n', ...
+	N,Z,L,K(1),T,B,G,alpha,lambda,mean(accuracy))
