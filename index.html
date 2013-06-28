@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <style type="text/css">
+      table {border-collapse:collapse}
+      td {padding: 3px}
+      table, td {border:1px solid black}
+      
+    </style>
+    <script type="text/javascript">
+var csvhttp = new XMLHttpRequest();
+csvhttp.open("GET", "classification_results_job1.csv",false);
+csvhttp.send(null);
+var csvresponse = csvhttp.responseText;
+var csvlines = csvresponse.split('\n');
+//console.log(csvresponse);
+//window.onload = function () {
+//  var txt = document.createElement("div");
+//  txt.innerHTML = csvresponse;
+//  document.body.appendChild(txt);
+//};
+window.onload = function () {
+    var restable = document.body.lastElementChild;
+    //console.log(document.body);
+    //console.log(restable);
+    //console.log(csvlines.length);
+
+    csvlines.slice(0,csvlines.length-1).forEach(function (csvline) {
+        console.log(csvline);
+	var items = csvline.split(',');
+	var row = document.createElement("tr");
+	items.forEach(function (item) {
+	    var entry = document.createElement("td");
+	    entry.innerHTML = item;
+	    row.appendChild(entry);
+	});
+	restable.appendChild(row);
+    });
+};
+    </script>
+    
+  </head>
+  <body>
+    <h1>DBN Classification Results</h1>
+    <table>
+      <tr>
+	<td>N</td>
+	<td>z</td>
+	<td>L</td>
+	<td>K</td>
+	<td>T</td>
+	<td>B</td>
+	<td>G</td>
+	<td>lambda</td>
+	<td>alpha</td>
+	<td>accuracy</td>
+      </tr>
+    </table>
+  </body>
+</html>
