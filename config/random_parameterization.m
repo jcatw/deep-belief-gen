@@ -5,8 +5,8 @@ space_B = [5 10 20];
 space_G = [1 5 10 20];
 space_alpha = [1.0 0.1 0.01 0.001];
 space_lambda = [0.1 0.01 0.001 0.0001];
-space_N = [100 500 1000];
-space_z = [10 50 100 200 500 1000];
+space_N = [100 250 500];
+space_z = [10 50 100 200];
 
 L = space_L(randi(length(space_L)))
 K = repmat(space_K(randi(length(space_K))),1,L)

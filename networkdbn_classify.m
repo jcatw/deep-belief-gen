@@ -1,3 +1,4 @@
+
 addpath(genpath('.'));
 
 timestamp=now;
@@ -125,12 +126,13 @@ fprintf(1, '\n%d-fold cross-validation accuracy: %f\n\n', xval, 100*mean(accurac
 
 confusion_matrix = confusion(labels, all_predictions)
 
-fig=figure();
-imshow(confusion_matrix);
-title('Confusion Matrix');
-saveas(fig,sprintf('results/dbn_%f_classification_confusion.pdf',timestamp),'pdf');
+%fig=figure();
+%imshow(confusion_matrix);
+%title('Confusion Matrix');
+%saveas(fig,sprintf('results/dbn_%f_classification_confusion.pdf',timestamp),'pdf');
 
-writefile = fopen(writefilename,'w');
-fprintf('%d,%d,%d,%d,%d,%d,%d,%f,%f,%f\n', ...
-	N,Z,L,K(1),T,B,G,alpha,lambda,mean(accuracy));
+writefile = fopen(writefilename,'a+');
+fprintf(writefile, ...
+	'%d,%d,%d,%d,%d,%d,%d,%f,%f,%f\n', ...
+	N_total,z,L,K(1),T,B,G,alpha,lambda,mean(accuracy));
 fclose(writefile);
