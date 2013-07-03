@@ -9,8 +9,8 @@ writefilename = 'classification_results_job1.csv';
 xval = 5;
 
 % DBN parameters
-%standard_small_parameterization;
-random_parameterization;
+standard_small_parameterization;
+%random_parameterization;
 
 % labels
 nlab = 3;
@@ -53,7 +53,7 @@ fprintf(1,'\nPopulating training data for model type %s.\n', 'smallworld');
 
 smallw_x = zeros(N(logical(lbl_smallw)),z^2);
 for i=1:N(logical(lbl_smallw))
-  full_network = full(smallw(z,smallworld_k,smallworld_p));
+  full_network = smallw(z,smallworld_k,smallworld_p);
   %full_network = load(sprintf('data/smallworld-networks/sw%d',i));
   smallw_x(i,:) = reshape(full_network(1:z,1:z),1,z^2);
   %smallw_x(i,:) = reshape(full_network.full_network(1:z,1:z),1,z^2);
@@ -68,7 +68,7 @@ fprintf(1,'\nPopulating training data for model type %s.\n', 'erdos-renyi');
 
 er_x = zeros(N(logical(lbl_er)),z^2);
 for i=1:N(logical(lbl_er))
-  full_network = full(erdrey(z,2*z));
+  full_network = erdrey(z,2*z);
   %full_network = load(sprintf('data/er-networks/er%d',i));
   er_x(i,:) = reshape(full_network(1:z,1:z),1,z^2);
   %er_x(i,:) = reshape(full_network.full_network(1:z,1:z),1,z^2);
@@ -76,13 +76,13 @@ end
 x_lab{logical(lbl_er)} = er_x;
 clear er_x;
 
-x = [x_lab{logical(lbl_krapiv)}; ...
+x = sparse([x_lab{logical(lbl_krapiv)}; ...
      x_lab{logical(lbl_smallw)}; ...
-     x_lab{logical(lbl_er)}      ];
+     x_lab{logical(lbl_er)}      ]);
 
-labels = [repmat(lbl_krapiv,N(logical(lbl_krapiv)),1); ...
+labels = sparse([repmat(lbl_krapiv,N(logical(lbl_krapiv)),1); ...
 	  repmat(lbl_smallw,N(logical(lbl_smallw)),1); ...
-	  repmat(lbl_er,N(logical(lbl_er)),1)          ];
+	  repmat(lbl_er,N(logical(lbl_er)),1)          ]);
 
 %%size(x)
 %%size(labels)

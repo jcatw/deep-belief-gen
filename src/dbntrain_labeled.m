@@ -45,15 +45,15 @@ dbn.numclasses = lablen;
 dbn.rec.bias = cell(1,L+1);  % work with receptive weights, set generative to result when done
 dbn.rec.pair = cell(1,L);
 
-dbn.rec.label.pair = 0.1 * randn(lablen,K(end));
-dbn.rec.label.bias = 0.1 * randn(1,lablen);
+dbn.rec.label.pair = sparse(0.1 * randn(lablen,K(end)));
+dbn.rec.label.bias = sparse(0.1 * randn(1,lablen));
 
-dbn.rec.bias{1} = 0.1 * randn(1,D);
-dbn.rec.bias{2} = 0.1 * randn(1,K(1));
+dbn.rec.bias{1} = sparse(0.1 * randn(1,D));
+dbn.rec.bias{2} = sparse(0.1 * randn(1,K(1)));
 
-dbn.rec.pair{1} = 0.1 * randn(D,K(1));
+dbn.rec.pair{1} = sparse(0.1 * randn(D,K(1)));
 
-sample_h = randi(2,C,K(1)) - 1;
+sample_h = sparse(randi(2,C,K(1)) - 1);
 
 % train first layer
 for t=1:T
@@ -87,10 +87,10 @@ end
 
 % train all remaining layers except top
 for lyr=2:L-1
-  dbn.rec.pair{lyr} = 0.1 * randn(K(lyr-1),K(lyr));
-  dbn.rec.bias{lyr+1} = 0.1 * randn(1,K(lyr));
+  dbn.rec.pair{lyr} = sparse(0.1 * randn(K(lyr-1),K(lyr)));
+  dbn.rec.bias{lyr+1} = sparse(0.1 * randn(1,K(lyr)));
 
-  sample_h = randi(2,C,K(lyr)) - 1;
+  sample_h = sparse(randi(2,C,K(lyr)) - 1);
   for t=1:T
     for b=1:B
 	fprintf(1,'Pretraining: layer %d, iteration %d, batch %d\n',lyr,t,b);
@@ -124,14 +124,14 @@ end
 
 % train top layer
 lyr = L;
-dbn.rec.pair{lyr} = 0.1 * randn(K(lyr-1),K(lyr));
+dbn.rec.pair{lyr} = sparse(0.1 * randn(K(lyr-1),K(lyr)));
 %dbn.rec.bias{lyr} = 0.1 * randn(1,K(lyr-1));  % throw out penultimate biases
-dbn.rec.bias{lyr+1} = 0.1 * randn(1,K(lyr));
+dbn.rec.bias{lyr+1} = sparse(0.1 * randn(1,K(lyr)));
 
 [dummy, lablen] = size(labels);
 
 
-sample_h = randi(2,C,K(lyr)) - 1;
+sample_h = sparse(randi(2,C,K(lyr)) - 1);
 for t=1:T
   for b=1:B
     fprintf(1,'Pretraining: layer %d, iteration %d, batch %d\n',lyr,t,b);
