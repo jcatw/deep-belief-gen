@@ -4,7 +4,6 @@
       table {border-collapse:collapse}
       td {padding: 3px}
       table, td {border:1px solid black}
-      
     </style>
     <script type="text/javascript">
       var csvhttp = new XMLHttpRequest();
@@ -14,22 +13,24 @@
       var csvlines = csvresponse.split('\n');
 
       window.onload = function () {
-        var restable = document.body.lastElementChild;
-        
-        csvlines.slice(0,csvlines.length-1).forEach(function (csvline) {
-          console.log(csvline);
-          var items = csvline.split(',');
-          var row = document.createElement("tr");
-          items.forEach(function (item) {
-            var entry = document.createElement("td");
-            entry.innerHTML = item;
-            row.appendChild(entry);
+          var restable = document.body.lastElementChild;
+          
+          csvlines.slice(0,csvlines.length-1).forEach(function (csvline) {
+              console.log(csvline);
+              var items = csvline.split(',');
+	      var boldify = parseFloat(items[items.length-1]) >= 0.95;
+              var row = document.createElement("tr");
+              items.forEach(function (item) {
+		  var entry = document.createElement("td");
+		  entry.innerHTML = item;
+		  if(boldify)
+		      entry.innerHTML = "<b>" + entry.innerHTML + "</b>";
+		  row.appendChild(entry);
+              });
+              restable.appendChild(row);
           });
-        restable.appendChild(row);
-        });
       };
     </script>
-    
   </head>
   <body>
     <h1>DBN Classification Results</h1>
