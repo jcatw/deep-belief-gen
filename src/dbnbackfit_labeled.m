@@ -39,7 +39,7 @@ for t=1:T
     wakedata = batch_data;
     for i=1:dbn.L
       wakeprobs{i} = logistic( wakedata * dbn.rec.pair{i} + repmat(dbn.rec.bias{i+1},Nb,1) );
-      wakestates{i} = double(wakeprobs{i} > rand(Nb,dbn.K(i)));
+      wakestates{i} = double(wakeprobs{i} > sparse(rand(Nb,dbn.K(i))));
       wakedata = wakestates{i};
     end
 
@@ -47,13 +47,13 @@ for t=1:T
     top_h = wakestates{end};
     for i=1:G
       prob_top_x = logistic( top_h * dbn.gen.pair{end} + repmat(dbn.gen.bias{end-1},Nb,1) ) ;
-      top_x = double(prob_top_x > rand(Nb,dbn.K(end-1)));
+      top_x = double(prob_top_x > sparse(rand(Nb,dbn.K(end-1))));
       %size(dbn.gen.label.bias)
       prob_top_lab = softmax( top_h * dbn.gen.label.pair + repmat(dbn.gen.label.bias,Nb,1) );
       prob_top_h = logistic( top_x * dbn.rec.pair{end} + ...
 			     prob_top_lab * dbn.rec.label.pair + ...
 			     repmat(dbn.rec.bias{end}  ,Nb,1) );
-      top_h = double( prob_top_h > rand(Nb,dbn.K(end  )));
+      top_h = double( prob_top_h > sparse(rand(Nb,dbn.K(end  ))));
     end
 
     % down-pass: pick a state for every hidden variable
@@ -66,7 +66,7 @@ for t=1:T
     sleepstates{dbn.L} = top_x;
     for i=dbn.L-1:-1:2
       sleepprobs{i}  = logistic( sleepstates{i+1} * dbn.gen.pair{i} + repmat(dbn.gen.bias{i},Nb,1) );
-      sleepstates{i} = double(sleepprobs{i} > rand(Nb,dbn.K(i-1)));
+      sleepstates{i} = double(sleepprobs{i} > sparse(rand(Nb,dbn.K(i-1))));
     end
     visprobs = logistic( sleepstates{2} * dbn.gen.pair{1} + repmat(dbn.gen.bias{1},Nb,1) );
     

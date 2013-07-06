@@ -9,8 +9,10 @@ writefilename = 'classification_results_job1.csv';
 xval = 5;
 
 % DBN parameters
-standard_small_parameterization;
+%standard_small_parameterization;
 %random_parameterization;
+super_small;
+%z=1000;
 
 % labels
 nlab = 3;
@@ -61,6 +63,7 @@ for i=1:N(logical(lbl_smallw))
 end
 x_lab{logical(lbl_smallw)} = smallw_x;
 clear smallw_x;
+clear full_network;
 
 %% er [0 0 1]
 fprintf(1,'\nPopulating training data for model type %s.\n', 'erdos-renyi');
@@ -75,10 +78,12 @@ for i=1:N(logical(lbl_er))
 end
 x_lab{logical(lbl_er)} = er_x;
 clear er_x;
+clear full_network;
 
 x = sparse([x_lab{logical(lbl_krapiv)}; ...
      x_lab{logical(lbl_smallw)}; ...
      x_lab{logical(lbl_er)}      ]);
+clear x_lab;
 
 labels = sparse([repmat(lbl_krapiv,N(logical(lbl_krapiv)),1); ...
 	  repmat(lbl_smallw,N(logical(lbl_smallw)),1); ...

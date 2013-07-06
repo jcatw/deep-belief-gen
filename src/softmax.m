@@ -3,4 +3,4 @@ function [ probs ] = softmax( x )
 
 [N,c] = size(x);
 Z = sum(exp(x),2);
-probs = exp(x) ./ repmat(Z,1,c);
+probs = sparse(exp(x) ./ repmat(Z,1,c));
