@@ -2,7 +2,7 @@
 addpath(genpath('.'));
 
 timestamp=now;
-writefilename = 'classification_results_job1.csv';
+writefilename = 'classification_results_big1.csv';
 
 
 % xval-fold cross-validation
@@ -11,8 +11,9 @@ xval = 5;
 % DBN parameters
 %standard_small_parameterization;
 %random_parameterization;
-random_parameterization_big;
+%random_parameterization_big;
 %super_small;
+big_successful_parameterization;
 
 
 % labels
@@ -118,6 +119,7 @@ for i=1:xval
     fprintf(1,'\nValidation %d: Pretraining and backfitting dbn.\n',i);
     clear dbn;
     dbn = dbntrain_labeled(x_train, labels_train, L, T, Tb, B, C, K, G, alpha, lambda);
+    save(sprintf('results/dbn_%f_%d.mat',timestamp,i),'dbn');
     predictions = dbnclassify(dbn,x_test,10);
     %size(predictions)
     %size(labels_test)
