@@ -11,8 +11,9 @@ xval = 5;
 % DBN parameters
 %standard_small_parameterization;
 %random_parameterization;
-super_small;
-%z=1000;
+random_parameterization_big;
+%super_small;
+
 
 % labels
 nlab = 3;

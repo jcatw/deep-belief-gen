@@ -70,18 +70,26 @@ for t=1:T
 
     % negative gradient
     prob_x = logistic( sample_h * dbn.rec.pair{1}' + repmat(dbn.rec.bias{1},C,1) );
-    sample_x = prob_x > rand(C,D);
+    sample_x = prob_x > sparse(rand(C,D));
     prob_h = logistic( sample_x * dbn.rec.pair{1} + repmat(dbn.rec.bias{2},C,1) );
-    sample_h = prob_h > rand(C,K(1));
+    sample_h = prob_h > sparse(rand(C,K(1)));
 
     g_minus_bias_vis = sum(sample_x,1);
     g_minus_bias_hid = sum(prob_h,1);
     g_minus_pair = sample_x' * prob_h;
 
+    %issparse(dbn.rec.bias{1})
+    %issparse(g_plus_bias_vis/Nb)
+    %issparse(g_minus_bias_vis/C)
+    %issparse(lambda*dbn.rec.bias{1})
+    %issparse(alpha*(g_plus_bias_vis/Nb - g_minus_bias_vis/C - lambda*dbn.rec.bias{1}))
+
     % update parameters
     dbn.rec.bias{1} = dbn.rec.bias{1} + alpha*(g_plus_bias_vis/Nb - g_minus_bias_vis/C - lambda*dbn.rec.bias{1});
     dbn.rec.bias{2} = dbn.rec.bias{2} + alpha*(g_plus_bias_hid/Nb - g_minus_bias_hid/C - lambda*dbn.rec.bias{2});
     dbn.rec.pair{1} = dbn.rec.pair{1} + alpha*(g_plus_pair/Nb - g_minus_pair/C - lambda*dbn.rec.pair{1});
+
+    issparse(dbn.rec.bias{1});
   end
 end
 
@@ -98,7 +106,7 @@ for lyr=2:L-1
 	% sample current visible layer
 	batch_data = x( 1+(b-1)*Nb : b*Nb, : );
 	for i=1:lyr-1
-	    batch_data = logistic( batch_data * dbn.rec.pair{i} + repmat(dbn.rec.bias{i+1},Nb,1) ) > rand(Nb, dbn.K(i));
+	    batch_data = logistic( batch_data * dbn.rec.pair{i} + repmat(dbn.rec.bias{i+1},Nb,1) ) > sparse(rand(Nb, dbn.K(i)));
 	end
 
 	% positive gradient
@@ -108,9 +116,9 @@ for lyr=2:L-1
 
 	% negative gradient
 	prob_x = logistic( sample_h * dbn.rec.pair{lyr}' + repmat(dbn.rec.bias{lyr},C,1) );
-	sample_x = prob_x > rand(C,K(lyr-1));
+	sample_x = prob_x > sparse(rand(C,K(lyr-1)));
 	prob_h = logistic( sample_x * dbn.rec.pair{lyr} + repmat(dbn.rec.bias{lyr+1},C,1) );
-	sample_h = prob_h > rand(C,K(lyr));
+	sample_h = prob_h > sparse(rand(C,K(lyr)));
 
 	g_minus_bias = sum(prob_h,1);
 	g_minus_pair = sample_x' * prob_h;
@@ -139,7 +147,7 @@ for t=1:T
     % sample current visible layer
     batch_data = x( 1+(b-1)*Nb : b*Nb, : );
     for i=1:lyr-1
-      batch_data = logistic( batch_data * dbn.rec.pair{i} + repmat(dbn.rec.bias{i+1},Nb,1) ) > rand(Nb, dbn.K(i));
+      batch_data = logistic( batch_data * dbn.rec.pair{i} + repmat(dbn.rec.bias{i+1},Nb,1) ) > sparse(rand(Nb, dbn.K(i)));
     end
     batch_labels = labels( 1+(b-1)*Nb : b*Nb, : );
     
@@ -158,7 +166,7 @@ for t=1:T
 
     % negative gradient
     prob_x = logistic( sample_h * dbn.rec.pair{lyr}' + repmat(dbn.rec.bias{lyr},C,1) );
-    sample_x = prob_x > rand(C,K(lyr-1));
+    sample_x = prob_x > sparse(rand(C,K(lyr-1)));
     %size(sample_h)
     %size(dbn.rec.label.pair')
     prob_lab = softmax( sample_h * dbn.rec.label.pair' + repmat(dbn.rec.label.bias,C,1) );
@@ -169,7 +177,7 @@ for t=1:T
 		       repmat(dbn.rec.bias{lyr+1},C,1) + ...
 		       %prob_lab * dbn.rec.label.pair);
 		       sample_lab * dbn.rec.label.pair);
-    sample_h = prob_h > rand(C,K(lyr));
+    sample_h = prob_h > sparse(rand(C,K(lyr)));
 
     g_minus_pen_bias = sum(sample_x,1);
     g_minus_bias = sum(prob_h,1);
