@@ -9,8 +9,8 @@ Gs = 20
 alpha = 0.001
 lambda = 0.001
 
-N_krapiv = 3000
-N_smallw = 3000
-N_er = 3000
+N_krapiv = 1500
+N_smallw = 1500
+N_er = 1500
 
-z = 1000
+z = 500
