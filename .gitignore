@@ -3,3 +3,4 @@ data/MNIST/
 scratch.txt
 results/
 octave-core
+.DS_Store
