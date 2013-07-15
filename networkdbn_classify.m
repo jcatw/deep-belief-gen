@@ -12,7 +12,8 @@ xval = 5;
 %standard_small_parameterization;
 %random_parameterization;
 %random_parameterization_big;
-super_small;
+%super_small;
+small_successful_parameterization;
 %big_successful_parameterization;
 
 % Dataset
