@@ -52,7 +52,7 @@ end
 
 % train dbn
 fprintf(1,'\nPretraining and backfitting dbn.\n');
-dbn = dbntrain(x, L, T, B, C, K, G, alpha, lambda);
+dbn = dbntrain(x, L, T, T, B, C, K, G, alpha, lambda);
 
 if compare
    fprintf(1,'\nGenerating comparison plots.\n');

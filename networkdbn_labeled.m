@@ -11,7 +11,7 @@ input_type='mix';
 compare = 1;
 
 % training data parameters
-N = 32;  % number of training networks (must be perfect square)
+N = 32;  % number of training networks per model
 S = 1000; % number of nodes in the training networks (if pre-generated)
 z = 200;   % only consider the z by z upper lefthand sub-matrix
 
@@ -33,34 +33,37 @@ lambda = 0.0001;
 
 sample_burn = 0;
 
+N_krapiv = N;
+N_smallw = N;
+data_krapivsky_smallworld;
 
-% populate training data
-fprintf(1,'\nPopulating training data for model type %s.\n', 'krapivsky');
-x1 = zeros(N,z^2);
-for i=1:N
-  full_network = load_edgelist(sprintf('data/krapivsky-networks/rdbn-%d.csv',i),S);
-  x1(i,:) = reshape(full_network(1:z,1:z),1,z^2);
-end
-
-fprintf(1,'\nPopulating training data for model type %s.\n', 'smallworld');
-x2 = zeros(N,z^2);
-for i=1:N
-  full_network = full(smallw(z,smallworld_k,smallworld_p));
-  x2(i,:) = reshape(full_network,1,z^2);
-end
-
-x = [x1; x2];
-%labels = [zeros(N,1); ones(N,1)];
-labels = zeros(2*N,2);
-labels(1:N,1) = 1;
-labels(N+1:end,2) = 1;
-%labels
-% [1 0]: krapivsky
-% [0 1]: smallworld
-
-ordr = randperm(2*N);
-x = x(ordr,:);
-labels = labels(ordr,:);
+%% populate training data
+%fprintf(1,'\nPopulating training data for model type %s.\n', 'krapivsky');
+%x1 = zeros(N,z^2);
+%for i=1:N
+%  full_network = load_edgelist(sprintf('data/krapivsky-networks/rdbn-%d.csv',i),S);
+%  x1(i,:) = reshape(full_network(1:z,1:z),1,z^2);
+%end
+%
+%fprintf(1,'\nPopulating training data for model type %s.\n', 'smallworld');
+%x2 = zeros(N,z^2);
+%for i=1:N
+%  full_network = full(smallw(z,smallworld_k,smallworld_p));
+%  x2(i,:) = reshape(full_network,1,z^2);
+%end
+%
+%x = [x1; x2];
+%%labels = [zeros(N,1); ones(N,1)];
+%labels = zeros(2*N,2);
+%labels(1:N,1) = 1;
+%labels(N+1:end,2) = 1;
+%%labels
+%% [1 0]: krapivsky
+%% [0 1]: smallworld
+%
+%ordr = randperm(2*N);
+%x = x(ordr,:);
+%labels = labels(ordr,:);
 
 % train dbn
 fprintf(1,'\nPretraining and backfitting dbn.\n');
