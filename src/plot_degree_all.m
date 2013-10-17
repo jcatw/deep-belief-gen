@@ -1,4 +1,4 @@
-function [] = plot_degree(x, sample, filename)
+function [] = plot_degree_all(x, sample, filename)
 %Plot the degree log-log ccdf
 %   Plot the ccdf of the in and out-degree of both x and sample.
 

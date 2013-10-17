@@ -1,9 +1,9 @@
 % labels
 nlab = 2;
 lbl_krapiv = [1 0];
-lbl_smallw = [0 1];
+lbl_er     = [0 1];
 
-N_total = N_krapiv + N_smallw;
+N_total = N_krapiv + N_er;
 
 if(exist('xval','var'))
 assert(mod(N_total,xval) == 0, ...
@@ -20,16 +20,16 @@ x_lab{logical(lbl_krapiv)} = load_krapivsky(z,
 					    'data/krapivsky-networks/rdbn-%d.csv');
 					    
 
-%% smallworld [0 1]
-fprintf(1,'\nPopulating training data for model type %s.\n', 'smallworld');
-x_lab{logical(lbl_smallw)} = load_smallworld(z, N_smallw, 3, 0.2);
+%% er [0 1]
+fprintf(1,'\nPopulating training data for model type %s.\n', 'erdos-renyi');
 
+x_lab{logical(lbl_er)} = load_er(z,N_er,z,z^2);
 x = sparse([x_lab{logical(lbl_krapiv)}; ...
-     x_lab{logical(lbl_smallw)}]);
+     x_lab{logical(lbl_er)}      ]);
 clear x_lab;
 
 labels = sparse([repmat(lbl_krapiv,N_krapiv,1); ...
-	  repmat(lbl_smallw,N_smallw,1)]);
+	  repmat(lbl_er,N_er,1)]);
 
 %% randomize order
 ordr = randperm(N_total);

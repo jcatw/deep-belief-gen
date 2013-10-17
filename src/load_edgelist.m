@@ -1,4 +1,4 @@
- function [ A ] = load_edgelist( filename, n )
+function [ A ] = load_edgelist( filename, n )
 %load_edgelist loads a comma-seperated from,to edgelist with n nodes
 %              returns an adjacency matrix
 

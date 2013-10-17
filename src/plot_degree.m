@@ -29,6 +29,9 @@ oy = log10(1 - oycdf);
 osx = log10(osxcdf);
 osy = log10(1 - osycdf);
 
+size(osx)
+size(osy)
+
 fig=figure;
 plot(ix(ix ~= -Inf & iy ~= -Inf), iy(ix ~= -Inf & iy ~= -Inf), 'bx-', isx(isx ~= -Inf & isy ~= -Inf), isy(isx ~= -Inf & isy ~= -Inf), 'cx-', ox(ox ~= -Inf & oy ~= -Inf), oy(ox ~= -Inf & oy ~= -Inf), 'rx-', osx(osx ~= -Inf & osy ~= -Inf), osy(osx ~= -Inf & osy ~= -Inf), 'mx-');
 
